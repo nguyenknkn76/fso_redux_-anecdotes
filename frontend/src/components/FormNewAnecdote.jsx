@@ -1,17 +1,18 @@
 import { useDispatch, useSelector } from "react-redux"
-import { creatorNewAnec } from "../reducers/anecdoteReducer"
-import { creatorResetNotification, creatorSendNotification } from "../reducers/notificationReducer"
+import { addNewAnec, creatorNewAnec } from "../reducers/anecdoteReducer"
+import { creatorResetNotification, creatorSendNotification, setNoti } from "../reducers/notificationReducer"
+import AnecService from "../services/AnecService"
 const FormNewAnecdote = () => {
     const dispatch = useDispatch()
     const anecdotes = useSelector(state => state.anecdotes)
     const notification = useSelector(state => state.notification)
 
-    const submitAddNewAnec = (event) => {
+    const submitAddNewAnec = async (event) => {
         event.preventDefault()
         const anecdoteContent = event.target.newAnecdote.value
         event.target.newAnecdote.value = ''
-        dispatch(creatorNewAnec(anecdoteContent))
-        dispatch(creatorSendNotification({type: "msg", msg: "add new anec success"}))
+        dispatch(addNewAnec(anecdoteContent))
+        dispatch(setNoti({type: 'msg',  msg: 'added success'}, 5))
     }
 
     return(

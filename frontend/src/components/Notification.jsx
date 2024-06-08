@@ -17,15 +17,16 @@ const Notification = () => {
     }
     const dispatch = useDispatch()
     const notification = useSelector(state => state.notification)
+    
     // console.log("notification",notification)
-    useEffect(() => {
-        if (notification) {
-            const timeoutId = setTimeout(() => {
-                dispatch(creatorResetNotification());
-            }, 5000);
-            return () => clearTimeout(timeoutId);
-        }
-    }, [notification, dispatch]);
+    // useEffect(() => {
+    //     if (notification) {
+    //         const timeoutId = setTimeout(() => {
+    //             dispatch(creatorResetNotification());
+    //         }, 5000);
+    //         return () => clearTimeout(timeoutId);
+    //     }
+    // }, [notification, dispatch]);
 
     return (
         <div>
