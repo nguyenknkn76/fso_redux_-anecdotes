@@ -1,3 +1,5 @@
+import {createSlice} from '@reduxjs/toolkit'
+
 export const listContent = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -12,62 +14,43 @@ export const listContent = [
 
 const generateId = () => Number((Math.random() * 1000000).toFixed(0))
 
-export const initState = listContent.map(content => ({
+export const initialState = listContent.map(content => ({
     id: generateId(),
     content,
     votes: 0
 }))
 
-const anecdoteReducer = (state = initState, action) =>{
-    switch(action.type){
-        case "NEW_ANEC": return [...state, action.payload]
-        case "VOTE_ANEC" : {
-            const id  = action.payload
-            const needVoteAnecBf = state.find(anec => anec.id === id)
-            const needVoteAnecAt = {...needVoteAnecBf, votes: needVoteAnecBf.votes + 1}
-            return state.map(anec => anec.id !== id ? anec : needVoteAnecAt)
-        }
-        case "SORT_ANEC": {
-            const sortedState = state.slice().sort((a, b) => b.votes - a.votes)
-            return sortedState
-        }
-        default : return state
-    }
-}
+const anecdoteSlice = createSlice({
+    name: 'anecdote',
+    initialState,
+    reducers: {
+        creatorNewAnec(state, action){
+            const newAnec = {
+                content: action.payload,
+                id: generateId(),
+                votes: 0
+            }
+            return [...state, newAnec]
+        },
+        creatorEditAnec(state, action){
+            const {id, content} = action.payload
+            const needToEditAnec = state.find(anec => anec.id === id)
+            const editedAnec = {...needToEditAnec, content: content}
+            return state.map(anec => anec.id !== id ? anec : editedAnec)
+        },
+        creatorVoteAnec(state, action){
+            const id = action.payload
+            const needToVoteAnec = state.find(anec => anec.id ===id)
+            const votedAnec = {...needToVoteAnec, votes: needToVoteAnec.votes + 1}
+            return state.map(anec => anec.id !== id ? anec : votedAnec)
+        },
+        creatorSortAnec(state, action){
+            // const sortedState = state.slice().sort((a,b) => b.votes - a.votes)
+            // return sortedState
+            return [...state].sort((a,b) => b.votes - a.votes)
+        },
+    } 
+})
 
-
-export const creatorNewAnec = (content) => {
-    return({
-        type: "NEW_ANEC",
-        payload: {
-            id: generateId(),
-            content,
-            votes: 0
-        }
-    })
-}
-
-export const creatorEditAnec = (id, content) => {
-    return({
-        type: "EDIT_ANEC",
-        payload:{
-            id,
-            content
-        }
-    })
-}
-
-export const creatorVoteAnec = id => {
-
-    return({
-        type:"VOTE_ANEC",
-        payload: id
-    })
-}
-
-export const creatorSortAnec = () => {
-    return({
-        type:"SORT_ANEC"
-    })
-}
-export default anecdoteReducer
+export const {creatorEditAnec, creatorNewAnec, creatorSortAnec, creatorVoteAnec} = anecdoteSlice.actions
+export default anecdoteSlice.reducer

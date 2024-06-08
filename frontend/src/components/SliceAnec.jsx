@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 const SliceAnec = () => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state)
+    const anecdotes = useSelector(state => state.anecdotes)
     const [pos, setPos] = useState(0)
 
 

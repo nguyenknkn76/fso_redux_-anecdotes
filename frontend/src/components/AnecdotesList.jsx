@@ -1,19 +1,22 @@
 import {useDispatch, useSelector} from 'react-redux'
-import { initState, creatorNewAnec, creatorVoteAnec, creatorSortAnec} from '../reducers/anecdoteReducer'
+import { initialState, creatorNewAnec, creatorVoteAnec, creatorSortAnec} from '../reducers/anecdoteReducer'
 import { useEffect } from 'react'
+import { creatorSendNotification } from '../reducers/notificationReducer'
 
 const AnecdotesList = () => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state)
+    const anecdotes = useSelector(state => state.anecdotes)
     const sortedAnecdotes = anecdotes.slice().sort((a, b) => b.votes - a.votes)
-    console.log(anecdotes)
+    // console.log(anecdotes)
 
     // useEffect(()=> {
     //     dispatch(creatorNewAnec('hello sir'))
     // },[])
     
     const voteAnec = id => {
+        const anecdote = anecdotes.find(anec => anec.id === id)
         dispatch(creatorVoteAnec(id))
+        dispatch(creatorSendNotification({type: "msg", msg: `you voted "${anecdote.content}"`}))
     }
 
     const sortAnecdotesList = () => {
